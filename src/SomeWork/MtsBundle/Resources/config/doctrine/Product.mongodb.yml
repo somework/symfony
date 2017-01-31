@@ -1,0 +1,39 @@
+# src/SomeWork/MtsBundle/Resources/config/doctrine/Product.mongodb.yml
+SomeWork\MtsBundle\Document\Product:
+  type: document
+  db: mts
+  collection: products
+  fields:
+    id:
+      type: string
+      id: true
+      strategy: NONE
+    url:
+      type: string
+    pictures:
+      type: array
+    pickup:
+      type: boolean
+    delivery:
+      type: boolean
+    vendor:
+      type: string
+    model:
+      type: string
+    manufacturer_warranty:
+      type: boolean
+    description:
+      type: string
+    available:
+      type: boolean
+  referenceOne:
+    category:
+      targetDocument: SomeWork\MtsBundle\Document\Category
+      cascade: all
+      storeAs: dbRef
+  referenceMany:
+    offers:
+      targetDocument: SomeWork\MtsBundle\Document\Offer
+      cascade: all
+      storeAs: dbRef
+      strategy: addToSet
