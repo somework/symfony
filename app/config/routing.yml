@@ -1,3 +1,7 @@
+some_work_mts:
+    resource: "@SomeWorkMtsBundle/Resources/config/routing.yml"
+    prefix:   /
+
 app:
     resource: "@AppBundle/Controller/"
     type:     annotation
