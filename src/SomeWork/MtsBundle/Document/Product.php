@@ -2,88 +2,101 @@
 
 namespace SomeWork\MtsBundle\Document;
 
-
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
  * SomeWork\MtsBundle\Document\Product
+ * @ODM\Document(db="mts", collection="products")
  */
 class Product
 {
     /**
      * @var $id
+     * @ODM\Id(strategy="NONE", type="int")
      */
     protected $id;
 
     /**
      * @var string $url
+     * @ODM\Field(type="string")
      */
     protected $url;
 
     /**
      * @var array $pictures
+     * @ODM\Field(type="collection")
      */
     protected $pictures;
 
     /**
      * @var boolean $pickup
+     * @ODM\Field(type="boolean")
      */
     protected $pickup;
 
     /**
      * @var boolean $delivery
+     * @ODM\Field(type="boolean")
      */
     protected $delivery;
 
     /**
      * @var string $vendor
+     * @ODM\Field(type="string")
      */
     protected $vendor;
 
     /**
      * @var string $model
+     * @ODM\Field(type="string")
      */
     protected $model;
 
     /**
      * @var boolean $manufacturer_warranty
+     * @ODM\Field(type="boolean")
      */
     protected $manufacturer_warranty;
 
     /**
      * @var string $description
+     * @ODM\Field(type="string")
      */
     protected $description;
 
     /**
      * @var boolean $available
+     * @ODM\Field(type="boolean")
      */
     protected $available;
 
     /**
-     * @var SomeWork\MtsBundle\Document\Category
+     * @var Category
+     * @ODM\ReferenceOne(
+     *     cascade="all",
+     *     targetDocument="\SomeWork\MtsBundle\Document\Category",
+     *     storeAs="dbRef",
+     * )
      */
     protected $category;
 
     /**
-     * @var SomeWork\MtsBundle\Document\Offer
+     * @var Collection
+     * @ODM\ReferenceMany(
+     *     cascade="all",
+     *     targetDocument="\SomeWork\MtsBundle\Document\Offer",
+     *     storeAs="dbRef",
+     *     strategy="addToSet"
+     * )
      */
-    protected $offers = array();
+    protected $offers = [];
 
-    public function __construct()
+    public function __construct(int $id)
     {
-        $this->offers = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
-    /**
-     * Set id
-     *
-     * @param string $id
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
+        $this->offers = new ArrayCollection();
+        $this->setId($id);
     }
 
     /**
@@ -97,14 +110,15 @@ class Product
     }
 
     /**
-     * Set url
+     * Set id
      *
-     * @param string $url
+     * @param string $id
+     *
      * @return $this
      */
-    public function setUrl($url)
+    public function setId($id)
     {
-        $this->url = $url;
+        $this->id = $id;
         return $this;
     }
 
@@ -119,14 +133,15 @@ class Product
     }
 
     /**
-     * Set pictures
+     * Set url
      *
-     * @param array $pictures
+     * @param string $url
+     *
      * @return $this
      */
-    public function setPictures(\array $pictures)
+    public function setUrl($url)
     {
-        $this->pictures = $pictures;
+        $this->url = $url;
         return $this;
     }
 
@@ -141,14 +156,15 @@ class Product
     }
 
     /**
-     * Set pickup
+     * Set pictures
      *
-     * @param boolean $pickup
+     * @param array $pictures
+     *
      * @return $this
      */
-    public function setPickup($pickup)
+    public function setPictures(array $pictures)
     {
-        $this->pickup = $pickup;
+        $this->pictures = $pictures;
         return $this;
     }
 
@@ -163,14 +179,15 @@ class Product
     }
 
     /**
-     * Set delivery
+     * Set pickup
      *
-     * @param boolean $delivery
+     * @param boolean $pickup
+     *
      * @return $this
      */
-    public function setDelivery($delivery)
+    public function setPickup($pickup)
     {
-        $this->delivery = $delivery;
+        $this->pickup = $pickup;
         return $this;
     }
 
@@ -185,14 +202,15 @@ class Product
     }
 
     /**
-     * Set vendor
+     * Set delivery
      *
-     * @param string $vendor
+     * @param boolean $delivery
+     *
      * @return $this
      */
-    public function setVendor($vendor)
+    public function setDelivery($delivery)
     {
-        $this->vendor = $vendor;
+        $this->delivery = $delivery;
         return $this;
     }
 
@@ -207,14 +225,15 @@ class Product
     }
 
     /**
-     * Set model
+     * Set vendor
      *
-     * @param string $model
+     * @param string $vendor
+     *
      * @return $this
      */
-    public function setModel($model)
+    public function setVendor($vendor)
     {
-        $this->model = $model;
+        $this->vendor = $vendor;
         return $this;
     }
 
@@ -229,14 +248,15 @@ class Product
     }
 
     /**
-     * Set manufacturerWarranty
+     * Set model
      *
-     * @param boolean $manufacturerWarranty
+     * @param string $model
+     *
      * @return $this
      */
-    public function setManufacturerWarranty($manufacturerWarranty)
+    public function setModel($model)
     {
-        $this->manufacturer_warranty = $manufacturerWarranty;
+        $this->model = $model;
         return $this;
     }
 
@@ -251,14 +271,15 @@ class Product
     }
 
     /**
-     * Set description
+     * Set manufacturerWarranty
      *
-     * @param string $description
+     * @param boolean $manufacturerWarranty
+     *
      * @return $this
      */
-    public function setDescription($description)
+    public function setManufacturerWarranty($manufacturerWarranty)
     {
-        $this->description = $description;
+        $this->manufacturer_warranty = $manufacturerWarranty;
         return $this;
     }
 
@@ -273,14 +294,15 @@ class Product
     }
 
     /**
-     * Set available
+     * Set description
      *
-     * @param boolean $available
+     * @param string $description
+     *
      * @return $this
      */
-    public function setAvailable($available)
+    public function setDescription($description)
     {
-        $this->available = $available;
+        $this->description = $description;
         return $this;
     }
 
@@ -295,21 +317,22 @@ class Product
     }
 
     /**
-     * Set category
+     * Set available
      *
-     * @param SomeWork\MtsBundle\Document\Category $category
+     * @param boolean $available
+     *
      * @return $this
      */
-    public function setCategory(\SomeWork\MtsBundle\Document\Category $category)
+    public function setAvailable($available)
     {
-        $this->category = $category;
+        $this->available = $available;
         return $this;
     }
 
     /**
      * Get category
      *
-     * @return SomeWork\MtsBundle\Document\Category $category
+     * @return Category $category
      */
     public function getCategory()
     {
@@ -317,21 +340,38 @@ class Product
     }
 
     /**
+     * Set category
+     *
+     * @param Category $category
+     *
+     * @return $this
+     */
+    public function setCategory(Category $category)
+    {
+        $this->category = $category;
+        $category->addProduct($this);
+        return $this;
+    }
+
+    /**
      * Add offer
      *
-     * @param SomeWork\MtsBundle\Document\Offer $offer
+     * @param Offer $offer
      */
-    public function addOffer(\SomeWork\MtsBundle\Document\Offer $offer)
+    public function addOffer(Offer $offer)
     {
-        $this->offers[] = $offer;
+        if (!$this->offers->contains($offer)) {
+            $this->offers->add($offer);
+            $offer->setProduct($this);
+        }
     }
 
     /**
      * Remove offer
      *
-     * @param SomeWork\MtsBundle\Document\Offer $offer
+     * @param Offer $offer
      */
-    public function removeOffer(\SomeWork\MtsBundle\Document\Offer $offer)
+    public function removeOffer(Offer $offer)
     {
         $this->offers->removeElement($offer);
     }
@@ -339,7 +379,7 @@ class Product
     /**
      * Get offers
      *
-     * @return \Doctrine\Common\Collections\Collection $offers
+     * @return Collection $offers
      */
     public function getOffers()
     {

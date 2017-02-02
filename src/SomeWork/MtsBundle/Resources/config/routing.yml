@@ -1,3 +1,6 @@
 some_work_mts_homepage:
     path:     /mts
     defaults: { _controller: SomeWorkMtsBundle:Default:index }
+some_work_mts_bundle_get:
+    path:     /mts/get
+    defaults: { _controller: SomeWorkMtsBundle:Default:get }

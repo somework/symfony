@@ -2,30 +2,40 @@
 
 namespace SomeWork\MtsBundle\Document;
 
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 
 /**
  * SomeWork\MtsBundle\Document\Offer
+ * @ODM\Document(db="mts", collection="offers")
  */
 class Offer
 {
     /**
      * @var $id
+     * @ODM\Id(strategy="INCREMENT", type="int")
      */
     protected $id;
 
     /**
      * @var int $price
+     * @ODM\Field(type="int")
      */
     protected $price;
 
     /**
      * @var string $currencyId
+     * @ODM\Field(type="string")
      */
     protected $currencyId;
 
     /**
-     * @var SomeWork\MtsBundle\Document\Product
+     * @var Product
+     * @ODM\ReferenceOne(
+     *     cascade="all",
+     *     targetDocument="\SomeWork\MtsBundle\Document\Product",
+     *     storeAs="dbRef",
+     * )
      */
     protected $product;
 
@@ -41,18 +51,6 @@ class Offer
     }
 
     /**
-     * Set price
-     *
-     * @param int $price
-     * @return $this
-     */
-    public function setPrice($price)
-    {
-        $this->price = $price;
-        return $this;
-    }
-
-    /**
      * Get price
      *
      * @return int $price
@@ -63,14 +61,15 @@ class Offer
     }
 
     /**
-     * Set currencyId
+     * Set price
      *
-     * @param string $currencyId
+     * @param int $price
+     *
      * @return $this
      */
-    public function setCurrencyId($currencyId)
+    public function setPrice($price)
     {
-        $this->currencyId = $currencyId;
+        $this->price = $price;
         return $this;
     }
 
@@ -85,24 +84,39 @@ class Offer
     }
 
     /**
-     * Set product
+     * Set currencyId
      *
-     * @param SomeWork\MtsBundle\Document\Product $product
+     * @param string $currencyId
+     *
      * @return $this
      */
-    public function setProduct(\SomeWork\MtsBundle\Document\Product $product)
+    public function setCurrencyId($currencyId)
     {
-        $this->product = $product;
+        $this->currencyId = $currencyId;
         return $this;
     }
 
     /**
      * Get product
      *
-     * @return SomeWork\MtsBundle\Document\Product $product
+     * @return Product $product
      */
     public function getProduct()
     {
         return $this->product;
+    }
+
+    /**
+     * Set product
+     *
+     * @param Product $product
+     *
+     * @return $this
+     */
+    public function setProduct(Product $product)
+    {
+        $this->product = $product;
+        $product->addOffer($this);
+        return $this;
     }
 }

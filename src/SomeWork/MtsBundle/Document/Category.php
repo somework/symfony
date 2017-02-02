@@ -2,77 +2,70 @@
 
 namespace SomeWork\MtsBundle\Document;
 
-
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
- * SomeWork\MtsBundle\Document\Category
+ * Category
+ * @ODM\Document(db="mts", collection="categories")
+ * @ODM\UniqueIndex(keys={"id"="asc", "name"="asc"})
  */
 class Category
 {
     /**
-     * @var $id
+     * @var int $id
+     * @ODM\Id(strategy="NONE", type="int")
      */
     protected $id;
 
     /**
      * @var string $name
+     * @ODM\Field(type="string")
      */
     protected $name;
 
     /**
-     * @var SomeWork\MtsBundle\Document\Category
+     * @var Collection|Category[]
+     * @ODM\ReferenceMany(
+     *     cascade="all",
+     *     targetDocument="\SomeWork\MtsBundle\Document\Category",
+     *     storeAs="id",
+     *     strategy="setArray",
+     *     mappedBy="childrenCategory"
+     * )
      */
-    protected $parentsCategory = array();
+    protected $parentsCategory = [];
 
     /**
-     * @var SomeWork\MtsBundle\Document\Category
+     * @var Collection|Category[]
+     * @ODM\ReferenceMany(
+     *     cascade="all",
+     *     targetDocument="\SomeWork\MtsBundle\Document\Category",
+     *     storeAs="id",
+     *     strategy="setArray",
+     *     inversedBy="parentsCategory"
+     * )
      */
-    protected $childrenCategory = array();
+    protected $childrenCategory = [];
 
     /**
-     * @var SomeWork\MtsBundle\Document\Product
+     * @var Collection|Product[]
+     * @ODM\ReferenceMany(
+     *     cascade="all",
+     *     targetDocument="\SomeWork\MtsBundle\Document\Product",
+     *     storeAs="dbRef",
+     *     strategy="setArray"
+     * )
      */
-    protected $products = array();
+    protected $products = [];
 
-    public function __construct()
+    public function __construct(int $id)
     {
-        $this->parentsCategory = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->childrenCategory = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->products = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
-    /**
-     * Set id
-     *
-     * @param int $id
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-    /**
-     * Get id
-     *
-     * @return int $id
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     * @return $this
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-        return $this;
+        $this->parentsCategory = new ArrayCollection();
+        $this->childrenCategory = new ArrayCollection();
+        $this->products = new ArrayCollection();
+        $this->setId($id);
     }
 
     /**
@@ -86,29 +79,95 @@ class Category
     }
 
     /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return $this
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
      * Add parentsCategory
      *
-     * @param SomeWork\MtsBundle\Document\Category $parentsCategory
+     * @param Category $parentsCategory
      */
-    public function addParentsCategory(\SomeWork\MtsBundle\Document\Category $parentsCategory)
+    public function addParentsCategory(Category $parentsCategory)
     {
-        $this->parentsCategory[] = $parentsCategory;
+        if (!$this->parentsCategory->contains($parentsCategory)) {
+            $this->parentsCategory->add($parentsCategory);
+            $parentsCategory->addChildrenCategory($this);
+        }
+    }
+
+    /**
+     * Add childrenCategory
+     *
+     * @param Category $childrenCategory
+     */
+    public function addChildrenCategory(Category $childrenCategory)
+    {
+        if (!$this->childrenCategory->contains($childrenCategory)) {
+            $this->childrenCategory->add($childrenCategory);
+            $childrenCategory->addParentsCategory($this);
+        }
+    }
+
+    /**
+     * Get id
+     *
+     * @return int $id
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set id
+     *
+     * @param int $id
+     *
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
     }
 
     /**
      * Remove parentsCategory
      *
-     * @param SomeWork\MtsBundle\Document\Category $parentsCategory
+     * @param Category $parentsCategory
      */
-    public function removeParentsCategory(\SomeWork\MtsBundle\Document\Category $parentsCategory)
+    public function removeParentsCategory(Category $parentsCategory)
     {
-        $this->parentsCategory->removeElement($parentsCategory);
+        if ($this->parentsCategory->removeElement($parentsCategory)) {
+            $this->removeChildrenCategory($this);
+        }
+    }
+
+    /**
+     * Remove childrenCategory
+     *
+     * @param Category $childrenCategory
+     */
+    public function removeChildrenCategory(Category $childrenCategory)
+    {
+        if ($this->childrenCategory->removeElement($childrenCategory)) {
+            $childrenCategory->removeParentsCategory($this);
+        }
     }
 
     /**
      * Get parentsCategory
      *
-     * @return \Doctrine\Common\Collections\Collection $parentsCategory
+     * @return Collection $parentsCategory
      */
     public function getParentsCategory()
     {
@@ -116,29 +175,9 @@ class Category
     }
 
     /**
-     * Add childrenCategory
-     *
-     * @param SomeWork\MtsBundle\Document\Category $childrenCategory
-     */
-    public function addChildrenCategory(\SomeWork\MtsBundle\Document\Category $childrenCategory)
-    {
-        $this->childrenCategory[] = $childrenCategory;
-    }
-
-    /**
-     * Remove childrenCategory
-     *
-     * @param SomeWork\MtsBundle\Document\Category $childrenCategory
-     */
-    public function removeChildrenCategory(\SomeWork\MtsBundle\Document\Category $childrenCategory)
-    {
-        $this->childrenCategory->removeElement($childrenCategory);
-    }
-
-    /**
      * Get childrenCategory
      *
-     * @return \Doctrine\Common\Collections\Collection $childrenCategory
+     * @return Collection $childrenCategory
      */
     public function getChildrenCategory()
     {
@@ -146,21 +185,24 @@ class Category
     }
 
     /**
-     * Add product
+     * Add product;
      *
-     * @param SomeWork\MtsBundle\Document\Product $product
+     * @param Product $product
      */
-    public function addProduct(\SomeWork\MtsBundle\Document\Product $product)
+    public function addProduct(Product $product)
     {
-        $this->products[] = $product;
+        if (!$this->products->contains($product)) {
+            $this->products->add($product);
+            $product->setCategory($this);
+        }
     }
 
     /**
      * Remove product
      *
-     * @param SomeWork\MtsBundle\Document\Product $product
+     * @param Product $product
      */
-    public function removeProduct(\SomeWork\MtsBundle\Document\Product $product)
+    public function removeProduct(Product $product)
     {
         $this->products->removeElement($product);
     }
@@ -168,7 +210,7 @@ class Category
     /**
      * Get products
      *
-     * @return \Doctrine\Common\Collections\Collection $products
+     * @return Collection $products
      */
     public function getProducts()
     {
