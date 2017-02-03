@@ -1,6 +1,6 @@
 <?php
 
-namespace SomeWork\YandexAppBundle\Tests\Controller;
+namespace SomeWork\AdminAppBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

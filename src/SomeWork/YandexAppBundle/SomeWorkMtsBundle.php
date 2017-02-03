@@ -1,6 +1,6 @@
 <?php
 
-namespace SomeWork\MtsBundle;
+namespace SomeWork\YandexMongoDBBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

@@ -1,0 +1,6 @@
+some_work_mts_homepage:
+    path:     /mts
+    defaults: { _controller: SomeWorkYandexAppBundle:Default:index }
+some_work_mts_bundle_get:
+    path:     /mts/get
+    defaults: { _controller: SomeWorkYandexAppBundle:Default:get }

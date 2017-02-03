@@ -1,6 +1,6 @@
 <?php
 
-namespace SomeWork\MtsBundle\Document;
+namespace SomeWork\YandexMongoDBBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 

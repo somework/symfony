@@ -1,7 +1,10 @@
-some_work_mts:
-    resource: "@SomeWorkMtsBundle/Resources/config/routing.yml"
+some_work_admin_app:
+    resource: "@SomeWorkAdminAppBundle/Resources/config/routing.yml"
     prefix:   /
 
-app:
-    resource: "@AppBundle/Controller/"
-    type:     annotation
+imports:
+    resource: routing/sonata_admin.yml
+
+some_work_mts:
+    resource: "@SomeWorkYandexAppBundle/Resources/config/routing.yml"
+    prefix:   /

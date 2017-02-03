@@ -1,6 +1,6 @@
 <?php
 
-namespace SomeWork\MtsBundle\Document;
+namespace SomeWork\YandexMongoDBBundle\Document;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

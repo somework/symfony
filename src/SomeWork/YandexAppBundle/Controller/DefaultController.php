@@ -1,16 +1,16 @@
 <?php
 
-namespace SomeWork\MtsBundle\Controller;
+namespace SomeWork\YandexAppBundle\Controller;
 
-use SomeWork\MtsBundle\Document\Category;
-use SomeWork\MtsBundle\Document\Product;
+use SomeWork\YandexAppBundle\Document\Category;
+use SomeWork\YandexAppBundle\Document\Product;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class DefaultController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('SomeWorkMtsBundle:Default:index.html.twig');
+        return $this->render('SomeWorkYandexAppBundle:Default:index.html.twig');
     }
 
     /**
@@ -32,7 +32,7 @@ class DefaultController extends Controller
         /**
          * @var Category $category
          */
-        $category = $dm->getRepository('SomeWorkMtsBundle:Category')
+        $category = $dm->getRepository('SomeWorkYandexAppBundle:Category')
             ->findOneBy([]);
 
         return $this->json([
